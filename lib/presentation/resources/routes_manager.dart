@@ -1,7 +1,7 @@
 import 'package:cleanarchmvvm/presentation/forgot_password/forgot_password.dart';
 import 'package:cleanarchmvvm/presentation/login/login.dart';
 import 'package:cleanarchmvvm/presentation/main/main_view.dart';
-import 'package:cleanarchmvvm/presentation/onboarding/onboarding.dart';
+import 'package:cleanarchmvvm/presentation/onboarding/view/onboarding_view.dart';
 import 'package:cleanarchmvvm/presentation/register/register.dart';
 import 'package:cleanarchmvvm/presentation/resources/strings_manager.dart';
 import 'package:cleanarchmvvm/presentation/splash/splash.dart';
