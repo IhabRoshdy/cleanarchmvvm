@@ -1,4 +1,4 @@
-import 'package:cleanarchmvvm/domain/models.dart';
+import 'package:cleanarchmvvm/domain/models/models.dart';
 import 'package:cleanarchmvvm/presentation/onboarding/viewModel/onboarding_view_model.dart';
 import 'package:cleanarchmvvm/presentation/resources/assets_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/color_manager.dart';
