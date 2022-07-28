@@ -1,3 +1,5 @@
+import 'package:cleanarchmvvm/app/app_prefrences.dart';
+import 'package:cleanarchmvvm/app/di.dart';
 import 'package:cleanarchmvvm/domain/models/models.dart';
 import 'package:cleanarchmvvm/presentation/onboarding/viewModel/onboarding_view_model.dart';
 import 'package:cleanarchmvvm/presentation/resources/assets_manager.dart';
@@ -20,8 +22,10 @@ class OnBoardingView extends StatefulWidget {
 class _OnBoardingViewState extends State<OnBoardingView> {
   final PageController _pageController = PageController();
   final OnBoardingViewModel _viewModel = OnBoardingViewModel();
+  final AppPrefrences _appPrefrences = instance<AppPrefrences>();
 
   _bind() {
+    _appPrefrences.setOnboardingScreenViewwed();
     _viewModel.start();
   }
 

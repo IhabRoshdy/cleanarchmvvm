@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cleanarchmvvm/domain/usecase/login_usecase.dart';
 import 'package:cleanarchmvvm/presentation/base/base_view_model.dart';
 import 'package:cleanarchmvvm/presentation/common/freezed_data_class.dart';
+import 'package:cleanarchmvvm/presentation/common/state_renderer/state_renderer.dart';
+import 'package:cleanarchmvvm/presentation/common/state_renderer/state_renderer_impl.dart';
 
 class LoginViewModel extends BaseViewModel
     with LoginViewModelInputs, LoginViewModelOutputs {
@@ -14,6 +16,8 @@ class LoginViewModel extends BaseViewModel
 
   final StreamController _areAllInputsValidStreamController =
       StreamController<void>.broadcast();
+
+  final StreamController isUserLoggedIn = StreamController<bool>();
 
   var loginObject = LoginObject("", "");
   final LoginUsecase _loginUsecase;
@@ -27,10 +31,15 @@ class LoginViewModel extends BaseViewModel
     _usernameStreamController.close();
     _passwordStreamController.close();
     _areAllInputsValidStreamController.close();
+    isUserLoggedIn.close();
+    super.dispose();
   }
 
   @override
-  void start() {}
+  void start() {
+    // Communicate with view to display content state as login view will not call API so no need to show loading state
+    inputState.add(ContentState());
+  }
 
   @override
   Sink get inputPassword => _passwordStreamController.sink;
@@ -59,9 +68,17 @@ class LoginViewModel extends BaseViewModel
 
   @override
   login() async {
+    inputState.add(
+        LoadingState(stateRendererType: StateRendererType.popupLoadingState));
     (await _loginUsecase.execute(
             LoginUsecaseInput(loginObject.username, loginObject.password)))
-        .fold((failure) => {}, (data) => {});
+        .fold((failure) {
+      inputState
+          .add(ErrorState(StateRendererType.popupErrorState, failure.message));
+    }, (data) {
+      inputState.add(ContentState());
+      isUserLoggedIn.add(true);
+    });
   }
 
   // Outputs

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cleanarchmvvm/app/app_prefrences.dart';
+import 'package:cleanarchmvvm/app/di.dart';
 import 'package:cleanarchmvvm/presentation/resources/assets_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/color_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/constants_manager.dart';
@@ -15,10 +17,25 @@ class SplashView extends StatefulWidget {
 
 class _SplashViewState extends State<SplashView> {
   Timer? _timer;
+  final AppPrefrences _appPrefrences = instance<AppPrefrences>();
 
   _startDelay() {
-    _timer = Timer(const Duration(seconds: AppConstants.splashDelay), () {
-      Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+    _timer = Timer(const Duration(seconds: AppConstants.splashDelay), _goNext);
+  }
+
+  _goNext() async {
+    _appPrefrences.isUserLoggedIn().then((isUserLoggedIn) {
+      if (isUserLoggedIn) {
+        Navigator.pushReplacementNamed(context, Routes.mainRoute);
+      } else {
+        _appPrefrences.isOnboardingScreenViewwed().then((isOnboardingViewwed) {
+          if (isOnboardingViewwed) {
+            Navigator.pushReplacementNamed(context, Routes.loginRoute);
+          } else {
+            Navigator.pushReplacementNamed(context, Routes.onBoardingRoute);
+          }
+        });
+      }
     });
   }
 
