@@ -14,6 +14,7 @@ class LoginViewModel extends BaseViewModel
   final StreamController _passwordStreamController =
       StreamController<String>.broadcast();
 
+  // Enables button after entering a valid inputs
   final StreamController _areAllInputsValidStreamController =
       StreamController<void>.broadcast();
 

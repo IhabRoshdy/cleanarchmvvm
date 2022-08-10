@@ -20,7 +20,10 @@ enum StateRendererType {
   fullScreenEmptyState,
 
   // General
-  contentState
+  contentState,
+
+  // Success
+  successState
 }
 
 class StateRenderer extends StatelessWidget {
@@ -72,6 +75,13 @@ class StateRenderer extends StatelessWidget {
         ]);
       case StateRendererType.contentState:
         return Container();
+      case StateRendererType.successState:
+        return _getPopupDialog([
+          _getAnimatedImage(JsonAssets.success),
+          _getMessage(title),
+          _getMessage(message),
+          _getOkButton(AppStrings.ok, context)
+        ], context);
       default:
         return Container();
     }
@@ -157,6 +167,22 @@ class StateRenderer extends StatelessWidget {
               child: Text(
                 buttonTitle,
               )),
+        ),
+      ),
+    );
+  }
+
+  Widget _getOkButton(String buttonTitle, BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppPadding.p18),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(buttonTitle)),
         ),
       ),
     );

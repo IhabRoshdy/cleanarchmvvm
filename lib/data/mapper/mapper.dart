@@ -23,11 +23,17 @@ extension ContactsResponseMapper on ContactsResponse? {
   }
 }
 
-extension AuthenticationMapper on AuthenticationResponse? {
+extension AuthenticationResponseMapper on AuthenticationResponse? {
   Authentication toDomain() {
     return Authentication(
       this?.customer.toDomain(),
       this?.contacts.toDomain(),
     );
+  }
+}
+
+extension ForgotPasswordResponseMapper on ForgotPasswordResponse? {
+  String toDomain() {
+    return this?.support?.orEmpty() ?? Constants.empty;
   }
 }

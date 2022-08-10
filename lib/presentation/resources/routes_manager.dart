@@ -1,5 +1,5 @@
 import 'package:cleanarchmvvm/app/di.dart';
-import 'package:cleanarchmvvm/presentation/forgot_password/forgot_password.dart';
+import 'package:cleanarchmvvm/presentation/forgot_password/view/forgot_password_view.dart';
 import 'package:cleanarchmvvm/presentation/login/view/login_view.dart';
 import 'package:cleanarchmvvm/presentation/main/main_view.dart';
 import 'package:cleanarchmvvm/presentation/onboarding/view/onboarding_view.dart';
@@ -36,6 +36,7 @@ class RouteGenerator {
       case Routes.storeDetailsRoute:
         return MaterialPageRoute(builder: (_) => const StoreDetailsView());
       case Routes.forgotPasswordRoute:
+        initForgotPasswordModule();
         return MaterialPageRoute(builder: (_) => const ForgotPasswordView());
       default:
         return unDefinedRoute();

@@ -27,6 +27,22 @@ class LoadingState extends StateFlow {
   }
 }
 
+class SuccessState extends StateFlow {
+  String message;
+
+  SuccessState({required this.message});
+
+  @override
+  String getMessage() {
+    return message;
+  }
+
+  @override
+  StateRendererType getStateRendererType() {
+    return StateRendererType.successState;
+  }
+}
+
 // Error state (Popup || Full screen)
 class ErrorState extends StateFlow {
   StateRendererType stateRendererType;
@@ -110,6 +126,17 @@ extension StateFlowExtension on StateFlow {
                 message: getMessage());
           }
         }
+      case SuccessState:
+        {
+          _dismissDialog(context);
+          showPopup(
+            context,
+            getStateRendererType(),
+            getMessage(),
+            title: AppStrings.success,
+          );
+          return contentScreenWidget;
+        }
       case EmptyState:
         {
           return StateRenderer(
@@ -142,14 +169,16 @@ extension StateFlowExtension on StateFlow {
     }
   }
 
-  showPopup(BuildContext context, StateRendererType stateRendererType,
-      String message) {
+  showPopup(
+      BuildContext context, StateRendererType stateRendererType, String message,
+      {String title = Constants.empty}) {
     WidgetsBinding.instance?.addPostFrameCallback((_) => showDialog(
         context: context,
         builder: (context) => StateRenderer(
               stateRendererType: stateRendererType,
               retryActionFunction: (() {}),
               message: message,
+              title: title,
             )));
   }
 }
