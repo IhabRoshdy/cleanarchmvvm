@@ -7,10 +7,13 @@ import 'package:cleanarchmvvm/data/repository/repository_impl.dart';
 import 'package:cleanarchmvvm/domain/repositories/repository.dart';
 import 'package:cleanarchmvvm/domain/usecase/forgot_password_usecase.dart';
 import 'package:cleanarchmvvm/domain/usecase/login_usecase.dart';
+import 'package:cleanarchmvvm/domain/usecase/register_usecase.dart';
 import 'package:cleanarchmvvm/presentation/forgot_password/viewmodel/forgot_password_viewmodel.dart';
 import 'package:cleanarchmvvm/presentation/login/viewmodel/login_viewmodel.dart';
+import 'package:cleanarchmvvm/presentation/register/viewmodel/register_viewmodel.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,5 +67,15 @@ initForgotPasswordModule() {
         () => ForgotPasswordUseCase(instance()));
     instance.registerFactory<ForgotPasswordViewModel>(
         () => ForgotPasswordViewModel(instance()));
+  }
+}
+
+initRegisterationModule() {
+  if (!GetIt.I.isRegistered<RegisterUsecase>()) {
+    instance
+        .registerFactory<RegisterUsecase>(() => RegisterUsecase(instance()));
+    instance.registerFactory<RegisterViewModel>(
+        () => RegisterViewModel(instance()));
+    instance.registerFactory<ImagePicker>(() => ImagePicker());
   }
 }

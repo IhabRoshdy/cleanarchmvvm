@@ -3,7 +3,7 @@ import 'package:cleanarchmvvm/presentation/forgot_password/view/forgot_password_
 import 'package:cleanarchmvvm/presentation/login/view/login_view.dart';
 import 'package:cleanarchmvvm/presentation/main/main_view.dart';
 import 'package:cleanarchmvvm/presentation/onboarding/view/onboarding_view.dart';
-import 'package:cleanarchmvvm/presentation/register/register.dart';
+import 'package:cleanarchmvvm/presentation/register/view/register_view.dart';
 import 'package:cleanarchmvvm/presentation/resources/strings_manager.dart';
 import 'package:cleanarchmvvm/presentation/splash/splash.dart';
 import 'package:cleanarchmvvm/presentation/store_details/store_details.dart';
@@ -30,6 +30,7 @@ class RouteGenerator {
         initLoginModule();
         return MaterialPageRoute(builder: (_) => const LoginView());
       case Routes.registerRoute:
+        initRegisterationModule();
         return MaterialPageRoute(builder: (_) => const RegisterView());
       case Routes.mainRoute:
         return MaterialPageRoute(builder: (_) => const MainView());

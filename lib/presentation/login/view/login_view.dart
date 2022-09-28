@@ -151,30 +151,35 @@ class _LoginViewState extends State<LoginView> {
               ),
               Padding(
                   padding: const EdgeInsets.only(
+                    top: AppPadding.p8,
                     left: AppPadding.p28,
                     right: AppPadding.p28,
-                    top: AppPadding.p8,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, Routes.forgotPasswordRoute);
-                        },
-                        child: Text(
-                          AppStrings.forgotPassword,
-                          style: Theme.of(context).textTheme.subtitle1,
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, Routes.forgotPasswordRoute);
+                          },
+                          child: Text(
+                            AppStrings.forgotPassword,
+                            style: Theme.of(context).textTheme.subtitle1,
+                            textAlign: TextAlign.left,
+                          ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, Routes.registerRoute);
-                        },
-                        child: Text(
-                          AppStrings.register,
-                          style: Theme.of(context).textTheme.subtitle1,
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.registerRoute);
+                          },
+                          child: Text(
+                            AppStrings.dontHaveAccount,
+                            style: Theme.of(context).textTheme.subtitle1,
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ),
                     ],

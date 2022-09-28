@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cleanarchmvvm/app/functions.dart';
 import 'package:cleanarchmvvm/domain/usecase/forgot_password_usecase.dart';
 import 'package:cleanarchmvvm/presentation/base/base_view_model.dart';
 import 'package:cleanarchmvvm/presentation/common/state_renderer/state_renderer.dart';
@@ -51,24 +52,18 @@ class ForgotPasswordViewModel extends BaseViewModel
           .map((areAllInputsValid) => _areAllInputsValid());
 
   _areAllInputsValid() {
-    return _isEmailValid(email);
+    return isEmailValid(email);
   }
 
   @override
   Stream<bool> get outIsEmailValid =>
-      _emailStreamController.stream.map((email) => _isEmailValid(email));
+      _emailStreamController.stream.map((email) => isEmailValid(email));
 
   @override
   Sink get inputAreAllInputsValid => _areAllInputValidStreamController.sink;
 
   @override
   Sink get inputEmail => _emailStreamController.sink;
-
-  bool _isEmailValid(String email) {
-    return RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-  }
 
   @override
   void dispose() {
