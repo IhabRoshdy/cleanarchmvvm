@@ -8,7 +8,9 @@ import 'package:cleanarchmvvm/domain/repositories/repository.dart';
 import 'package:cleanarchmvvm/domain/usecase/forgot_password_usecase.dart';
 import 'package:cleanarchmvvm/domain/usecase/login_usecase.dart';
 import 'package:cleanarchmvvm/domain/usecase/register_usecase.dart';
+import 'package:cleanarchmvvm/presentation/base/cubit/base_cubit.dart';
 import 'package:cleanarchmvvm/presentation/forgot_password/viewmodel/forgot_password_viewmodel.dart';
+import 'package:cleanarchmvvm/presentation/login/cubit/login_cubit.dart';
 import 'package:cleanarchmvvm/presentation/login/viewmodel/login_viewmodel.dart';
 import 'package:cleanarchmvvm/presentation/register/viewmodel/register_viewmodel.dart';
 import 'package:dio/dio.dart';
@@ -50,6 +52,8 @@ Future<void> initAppModule() async {
   // Repository instance
   instance.registerLazySingleton<Repository>(
       () => RepositoryImpl(instance(), instance()));
+
+  instance.registerLazySingleton<BaseCubit>(() => BaseCubit());
 }
 
 initLoginModule() {
@@ -57,6 +61,7 @@ initLoginModule() {
   if (!GetIt.I.isRegistered<LoginUsecase>()) {
     instance.registerFactory<LoginUsecase>(() => LoginUsecase(instance()));
     instance.registerFactory<LoginViewModel>(() => LoginViewModel(instance()));
+    instance.registerFactory<LoginCubit>(() => LoginCubit(instance()));
   }
 }
 

@@ -1,7 +1,8 @@
 import 'package:cleanarchmvvm/app/app_prefrences.dart';
 import 'package:cleanarchmvvm/app/di.dart';
+import 'package:cleanarchmvvm/presentation/base/cubit/base_cubit.dart';
 import 'package:cleanarchmvvm/presentation/common/state_renderer/state_renderer_impl.dart';
-import 'package:cleanarchmvvm/presentation/login/viewmodel/login_viewmodel.dart';
+import 'package:cleanarchmvvm/presentation/login/cubit/login_cubit.dart';
 import 'package:cleanarchmvvm/presentation/resources/assets_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/color_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/routes_manager.dart';
@@ -9,6 +10,7 @@ import 'package:cleanarchmvvm/presentation/resources/strings_manager.dart';
 import 'package:cleanarchmvvm/presentation/resources/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final LoginViewModel _viewModel = instance<LoginViewModel>();
+  late LoginCubit _loginCubit;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -27,49 +29,50 @@ class _LoginViewState extends State<LoginView> {
 
   final AppPrefrences _appPrefrences = instance<AppPrefrences>();
 
+  bool _isInit = true;
+
   _bind() {
-    _viewModel.start();
     _usernameController.addListener(() {
-      _viewModel.setUsername(_usernameController.text);
+      _loginCubit.setUsername(_usernameController.text);
     });
     _passwordController.addListener(() {
-      _viewModel.setPassword(_passwordController.text);
-    });
-    _viewModel.isUserLoggedIn.stream.listen((isLoggedIn) {
-      if (isLoggedIn) {
-        // Navigate to main screen
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
-          _appPrefrences.setUserLoggedIn();
-          Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
-        });
-      }
+      _loginCubit.setPassword(_passwordController.text);
     });
   }
 
   @override
-  void dispose() {
-    _viewModel.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    _bind();
-    super.initState();
+  void didChangeDependencies() {
+    if (_isInit) {
+      _loginCubit = BlocProvider.of<LoginCubit>(context);
+      _bind();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      body: StreamBuilder<StateFlow>(
-        stream: _viewModel.outputState,
-        builder: (context, snapshot) {
-          return snapshot.data?.getScreenWidget(context, _getContentWidget(),
-                  () {
-                _viewModel.login();
-              }) ??
-              _getContentWidget();
+      body: BlocConsumer<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is UserLoggedIn) {
+            // Navigate to main screen
+            SchedulerBinding.instance?.addPostFrameCallback((_) {
+              _appPrefrences.setUserLoggedIn();
+              Navigator.of(context).pushReplacementNamed(Routes.mainRoute);
+            });
+          }
+        },
+        builder: (context, state) {
+          return BlocBuilder<BaseCubit, BaseState>(
+            builder: (context, state) {
+              return state.inputState
+                  .getScreenWidget(context, _getContentWidget(), () {
+                _loginCubit.login(context);
+              });
+            },
+          );
         },
       ),
     );
@@ -89,16 +92,16 @@ class _LoginViewState extends State<LoginView> {
               Padding(
                 padding: const EdgeInsets.only(
                     right: AppPadding.p28, left: AppPadding.p28),
-                child: StreamBuilder<bool>(
-                  stream: _viewModel.outIsUserNameValid,
-                  builder: (context, snapshot) {
+                child: BlocBuilder<LoginCubit, LoginState>(
+                  builder: (context, state) {
                     return TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       controller: _usernameController,
                       decoration: InputDecoration(
                           hintText: AppStrings.username,
                           labelText: AppStrings.username,
-                          errorText: (snapshot.data ?? true)
+                          errorText: (state is InputsValidState &&
+                                  state.isUsernameValid == true)
                               ? null
                               : AppStrings.usernameError),
                     );
@@ -109,16 +112,16 @@ class _LoginViewState extends State<LoginView> {
               Padding(
                 padding: const EdgeInsets.only(
                     right: AppPadding.p28, left: AppPadding.p28),
-                child: StreamBuilder<bool>(
-                  stream: _viewModel.outIsPasswordValid,
-                  builder: (context, snapshot) {
+                child: BlocBuilder<LoginCubit, LoginState>(
+                  builder: (context, state) {
                     return TextFormField(
                       keyboardType: TextInputType.text,
                       controller: _passwordController,
                       decoration: InputDecoration(
                           hintText: AppStrings.password,
                           labelText: AppStrings.password,
-                          errorText: (snapshot.data ?? true)
+                          errorText: (state is InputsValidState &&
+                                  state.isPasswordValid == true)
                               ? null
                               : AppStrings.passwordError),
                     );
@@ -131,16 +134,16 @@ class _LoginViewState extends State<LoginView> {
                   left: AppPadding.p28,
                   right: AppPadding.p28,
                 ),
-                child: StreamBuilder<bool>(
-                  stream: _viewModel.outAreAllInputsValid,
-                  builder: (context, snapshot) {
+                child: BlocBuilder<LoginCubit, LoginState>(
+                  builder: (context, state) {
                     return SizedBox(
                       width: double.infinity,
                       height: AppSize.s40,
                       child: ElevatedButton(
-                        onPressed: (snapshot.data ?? false)
+                        onPressed: (state is InputsValidState &&
+                                state.areAllInputsValid)
                             ? () {
-                                _viewModel.login();
+                                _loginCubit.login(context);
                               }
                             : null,
                         child: const Text(AppStrings.login),
