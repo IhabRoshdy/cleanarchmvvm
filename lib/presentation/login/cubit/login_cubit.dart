@@ -19,26 +19,42 @@ class LoginCubit extends Cubit<LoginState> {
 
   var _loginObject = LoginObject("", "");
   final LoginUsecase _loginUsecase;
+  var _inputsValidState = const InputsValidState(
+    areAllInputsValid: false,
+    isPasswordValid: true,
+    isUsernameValid: true,
+  );
 
   void setUsername(String username) async {
     _loginObject = _loginObject.copyWith(username: username);
-    _validateInputs();
+    _validateUsernameInput();
   }
 
   void setPassword(String password) async {
     _loginObject = _loginObject.copyWith(password: password);
-    _validateInputs();
+    _validatePasswordInput();
   }
 
-  void _validateInputs() {
+  void _validateUsernameInput() {
     bool isUsernameValid = _loginObject.username.isNotEmpty;
+    bool areAllInputsValid =
+        _loginObject.username.isNotEmpty && _loginObject.password.isNotEmpty;
+    _inputsValidState = _inputsValidState.copyWith(
+      isUsernameValid: isUsernameValid,
+      areAllInputsValid: areAllInputsValid,
+    );
+    emit(_inputsValidState);
+  }
+
+  void _validatePasswordInput() {
     bool isPasswordValid = _loginObject.password.isNotEmpty;
     bool areAllInputsValid =
         _loginObject.username.isNotEmpty && _loginObject.password.isNotEmpty;
-    emit(InputsValidState(
-        isUsernameValid: isUsernameValid,
-        isPasswordValid: isPasswordValid,
-        areAllInputsValid: areAllInputsValid));
+    _inputsValidState = _inputsValidState.copyWith(
+      isPasswordValid: isPasswordValid,
+      areAllInputsValid: areAllInputsValid,
+    );
+    emit(_inputsValidState);
   }
 
   void login(BuildContext context) async {

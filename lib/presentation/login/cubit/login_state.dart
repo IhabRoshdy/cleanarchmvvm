@@ -70,4 +70,16 @@ class InputsValidState extends LoginState {
   @override
   List<Object?> get props =>
       [isUsernameValid, isPasswordValid, areAllInputsValid];
+
+  InputsValidState copyWith({
+    bool? isUsernameValid,
+    bool? isPasswordValid,
+    bool? areAllInputsValid,
+  }) {
+    return InputsValidState(
+      isUsernameValid: isUsernameValid ?? this.isUsernameValid,
+      isPasswordValid: isPasswordValid ?? this.isPasswordValid,
+      areAllInputsValid: areAllInputsValid ?? this.areAllInputsValid,
+    );
+  }
 }
