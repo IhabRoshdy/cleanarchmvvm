@@ -7,24 +7,17 @@ import 'package:cleanarchmvvm/presentation/resources/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   //const MyApp({Key? key}) : super(key: key); // Default constructor
 
   MyApp._internal(); // Private named constructor
 
-  static final MyApp instance = MyApp._internal(); // Singleton instance
+  static final MyApp myAppInstance = MyApp._internal(); // Singleton instance
 
   factory MyApp() {
-    return instance;
+    return myAppInstance;
   } // Factory method to populate the singleton instance
 
-  @override
-  State<MyApp> createState() {
-    return _MyAppState();
-  }
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
