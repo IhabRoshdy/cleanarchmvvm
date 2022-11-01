@@ -3,7 +3,6 @@ part of 'base_cubit.dart';
 
 @immutable
 abstract class BaseState {
-  //StateFlow get inputState;
   final StateFlow inputState;
   const BaseState({
     required this.inputState,
